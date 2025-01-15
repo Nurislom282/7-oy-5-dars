@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>All Foods</h1>
+    <div class="row">
+        {% for food in foods %}
+            <div class="col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{ food.image.url }}" class="card-img-top" alt="{{ food.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ food.name }}</h5>
+                        <p class="card-text">{{ food.description }} - {{ food.price }} $</p>
+                        <a href="{% url 'edit_food' food.id %}" class="btn btn-primary">Edit</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

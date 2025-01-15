@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="width: 18rem;">
+        <img src="{{ food.image.url }}" class="card-img-top" alt="{{ food.name }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ food.name }}</h5>
+            <p class="card-text">{{ food.description }}</p>
+            <p class="card-text">{{ food.price }} so'm</p>
+            <a href="{% url 'food_detail' food.id %}" class="btn btn-info">Batafsil</a>
+            {% if user.is_authenticated and user.is_superuser %}
+                <a href="{% url 'edit_food' food.id %}" class="btn btn-primary">Edit</a>
+            {% endif %}
+            <a href="{% url 'all_foods' %}" class="btn btn-secondary">Back to all foods</a>
+        </div>
+    </div>
+
+    <hr>
+    <h3>Izohlar</h3>
+    <ul class="list-group mb-4">
+        {% for comment in comments %}
+            <li class="list-group-item">
+                <strong>{{ comment.user.username }}</strong> ({{ comment.created_at|date:"Y-m-d H:i" }})
+                <p>{{ comment.text }}</p>
+                {% if user.is_authenticated and user == comment.user %}
+                    <form method="post" action="{% url 'delete_comment' comment.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">O'chirish</button>
+                    </form>
+                {% elif user.is_authenticated and user.is_superuser%}
+                    <form method="post" action="{% url 'delete_comment' comment.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">O'chirish</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="list-group-item">Hozircha izohlar yo'q.</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <h4>Izoh qoldirish</h4>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Yuborish</button>
+        </form>
+    {% else %}
+        <p>Izoh qoldirish uchun <a href="{% url 'login' %}">tizimga kiring</a>.</p>
+    {% endif %}
+{% endblock %}

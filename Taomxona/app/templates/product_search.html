@@ -1,0 +1,14 @@
+<form method="get" action="{% url 'product_search' %}">
+    {{ form.as_p }}
+    <button type="submit">Search</button>
+</form>
+
+{% if products %}
+    <ul>
+        {% for product in products %}
+            <li>{{ product.name }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No products found.</p>
+{% endif %}
